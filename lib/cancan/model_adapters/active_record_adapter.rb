@@ -1,6 +1,11 @@
 module CanCan
   module ModelAdapters
     class ActiveRecordAdapter < AbstractAdapter
+      # Overriding from AbstractAdapter
+      def self.find(model_class, id, includes = [])
+        model_class.includes(includes).find(id)
+      end
+
       def self.for_class?(model_class)
         model_class <= ActiveRecord::Base
       end
