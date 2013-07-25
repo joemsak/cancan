@@ -101,18 +101,19 @@ module CanCan
         clean_joins(joins_hash) unless joins_hash.empty?
       end
 
-      def database_records
+      def database_records(includes = [])
         if override_scope
           @model_class.scoped.merge(override_scope)
         elsif @model_class.respond_to?(:where) && @model_class.respond_to?(:joins)
           mergeable_conditions = @rules.select {|rule| rule.unmergeable? }.blank?
+
           if mergeable_conditions
-            @model_class.where(conditions).joins(joins)
+            @model_class.includes(includes).where(conditions).joins(joins)
           else
-            @model_class.where(*(@rules.map(&:conditions))).joins(joins)
+            @model_class.includes(includes).where(*(@rules.map(&:conditions))).joins(joins)
           end
         else
-          @model_class.scoped(:conditions => conditions, :joins => joins)
+          @model_class.includes(includes).scoped(:conditions => conditions, :joins => joins)
         end
       end
 

@@ -78,7 +78,7 @@ module CanCan
     end
 
     def load_collection
-      resource_base.accessible_by(current_ability, authorization_action)
+      resource_base.accessible_by(current_ability, authorization_action, @options[:includes])
     end
 
     def build_resource
